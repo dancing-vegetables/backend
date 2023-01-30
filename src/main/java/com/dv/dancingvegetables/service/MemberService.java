@@ -1,4 +1,5 @@
 package com.dv.dancingvegetables.service;
+import com.dv.dancingvegetables.domain.UserDetailsImpl;
 import com.dv.dancingvegetables.dto.responsedto.EmailAuthResponseDto;
 import com.dv.dancingvegetables.dto.responsedto.NicknameAuthResponseDto;
 import com.dv.dancingvegetables.dto.requestdto.*;
@@ -212,5 +213,18 @@ public class MemberService {
                         .email(member.getEmail())
                         .build()
         );
+    }
+
+    // 회원 탈퇴
+    @Transactional
+    public ResponseDto<?> withdrawMember(Long memberId, UserDetailsImpl userDetails) {
+        Member member = memberRepository.findById(userDetails.getMember().getId()).orElseThrow(
+                () ->new IllegalArgumentException("등록되지 않은 회원입니다.")
+        );
+
+        refreshTokenRepository.deleteByMemberId(memberId);
+        memberRepository.deleteById(memberId);
+
+        return ResponseDto.success("회원 탈퇴가 완료되었습니다.");
     }
 }

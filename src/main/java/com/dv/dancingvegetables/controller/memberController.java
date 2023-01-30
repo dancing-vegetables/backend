@@ -1,13 +1,12 @@
 package com.dv.dancingvegetables.controller;
+import com.dv.dancingvegetables.domain.UserDetailsImpl;
 import com.dv.dancingvegetables.dto.requestdto.LoginRequestDto;
 import com.dv.dancingvegetables.dto.requestdto.MemberRequestDto;
 import com.dv.dancingvegetables.dto.responsedto.ResponseDto;
 import com.dv.dancingvegetables.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,5 +42,11 @@ public class memberController {
     @PostMapping(value = "/reissue")
     public ResponseDto<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         return memberService.reissue(request, response);
+    }
+
+    //회원탈퇴
+    @DeleteMapping(value="/withdrawl/{memberId}")
+    public ResponseDto<?> withdrawal(@PathVariable Long memberId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return memberService.withdrawMember(memberId, userDetails);
     }
 }
