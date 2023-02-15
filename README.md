@@ -1,5 +1,5 @@
 # backend
-Dancing-Vegetables Backend repository1
+Dancing-Vegetables Backend repository
 <h3><b>🛠 Tech Stack 🛠</b></h3>
 <p>
 <img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=github&logoColor=white">
