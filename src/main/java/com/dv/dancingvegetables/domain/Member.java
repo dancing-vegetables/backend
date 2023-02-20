@@ -41,9 +41,9 @@ public class Member extends Timestamped implements Serializable {
     @Builder.Default
     private boolean isDeleted = Boolean.FALSE;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lank_id", nullable = false)
-    private Lank lank;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "lank_id", nullable = false)
+//    private Lank lank;
 
     public Member(String encodedPassword, String profileURL, String nickname, Long kakaoId) {
         this.nickname = nickname;

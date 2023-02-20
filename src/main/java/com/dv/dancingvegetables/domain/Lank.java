@@ -18,9 +18,12 @@ public class Lank {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member Member;
+    private Member member;
 
     @Column(name ="lank_point",nullable = false)
-    private Long LankPoint;
+    private Long lankPoint;
 
+    public void update(Long lankPoint){
+        this.lankPoint=lankPoint;
+    }
 }

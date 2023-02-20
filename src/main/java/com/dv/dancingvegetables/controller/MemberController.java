@@ -17,7 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/v1/members")
-public class memberController {
+public class MemberController {
     private final MemberService memberService;
 
     //회원가입
