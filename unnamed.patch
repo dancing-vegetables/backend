@@ -1,0 +1,228 @@
+Index: src/main/java/com/dv/dancingvegetables/configuration/SecurityConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/configuration/SecurityConfiguration.java b/src/main/java/com/dv/dancingvegetables/configuration/SecurityConfiguration.java
+--- a/src/main/java/com/dv/dancingvegetables/configuration/SecurityConfiguration.java	(revision 0d171176d0fb4e75c003be76c320bf1818f3c836)
++++ b/src/main/java/com/dv/dancingvegetables/configuration/SecurityConfiguration.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -56,6 +56,7 @@
+                 .and()
+                 .authorizeRequests()
+                 .antMatchers("/v1/members/**").permitAll()
++                .antMatchers("/v1/**").permitAll()
+                 .antMatchers("/v1/auth/**").permitAll()
+                 .antMatchers("/sub/**").permitAll()
+                 .antMatchers("/pub/**").permitAll()
+Index: src/main/java/com/dv/dancingvegetables/controller/LankController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/controller/LankController.java b/src/main/java/com/dv/dancingvegetables/controller/LankController.java
+new file mode 100644
+--- /dev/null	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
++++ b/src/main/java/com/dv/dancingvegetables/controller/LankController.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -0,0 +1,26 @@
++package com.dv.dancingvegetables.controller;
++
++import com.dv.dancingvegetables.dto.requestdto.LankDto;
++import com.dv.dancingvegetables.dto.responsedto.ResponseDto;
++import com.dv.dancingvegetables.service.LankService;
++import lombok.RequiredArgsConstructor;
++import org.springframework.web.bind.annotation.*;
++
++@RequiredArgsConstructor
++@RestController
++@RequestMapping(value = "/v1/lanks")
++public class LankController {
++        private final LankService lankService;
++
++        //랭크 포인트 갱신 및 저장
++    @PostMapping("/points")
++    public ResponseDto<?> lankPointSave(@RequestBody LankDto lankPoint){
++        return lankService.lankPointSave(lankPoint);
++    }
++    
++    //랭킹 10위 까지 추출
++    @GetMapping("/points/{id}")
++    public ResponseDto<?>LankPoints(@PathVariable Long id){
++        return lankService.lankPoint(id);
++    }
++}
+Index: src/main/java/com/dv/dancingvegetables/controller/memberController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/controller/memberController.java b/src/main/java/com/dv/dancingvegetables/controller/MemberController.java
+rename from src/main/java/com/dv/dancingvegetables/controller/memberController.java
+rename to src/main/java/com/dv/dancingvegetables/controller/MemberController.java
+--- a/src/main/java/com/dv/dancingvegetables/controller/memberController.java	(revision 0d171176d0fb4e75c003be76c320bf1818f3c836)
++++ b/src/main/java/com/dv/dancingvegetables/controller/MemberController.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -17,7 +17,7 @@
+ @RequiredArgsConstructor
+ @RestController
+ @RequestMapping(value = "/v1/members")
+-public class memberController {
++public class MemberController {
+     private final MemberService memberService;
+ 
+     //회원가입
+Index: src/main/java/com/dv/dancingvegetables/domain/Lank.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/domain/Lank.java b/src/main/java/com/dv/dancingvegetables/domain/Lank.java
+--- a/src/main/java/com/dv/dancingvegetables/domain/Lank.java	(revision 0d171176d0fb4e75c003be76c320bf1818f3c836)
++++ b/src/main/java/com/dv/dancingvegetables/domain/Lank.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -18,9 +18,12 @@
+ 
+     @OneToOne(fetch = FetchType.LAZY)
+     @JoinColumn(name = "member_id", nullable = false)
+-    private Member Member;
++    private Member member;
+ 
+     @Column(name ="lank_point",nullable = false)
+-    private Long LankPoint;
++    private Long lankPoint;
+ 
++    public void update(Long lankPoint){
++        this.lankPoint=lankPoint;
++    }
+ }
+Index: src/main/java/com/dv/dancingvegetables/domain/Member.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/domain/Member.java b/src/main/java/com/dv/dancingvegetables/domain/Member.java
+--- a/src/main/java/com/dv/dancingvegetables/domain/Member.java	(revision 0d171176d0fb4e75c003be76c320bf1818f3c836)
++++ b/src/main/java/com/dv/dancingvegetables/domain/Member.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -41,9 +41,9 @@
+     @Builder.Default
+     private boolean isDeleted = Boolean.FALSE;
+ 
+-    @OneToOne(fetch = FetchType.LAZY)
+-    @JoinColumn(name = "lank_id", nullable = false)
+-    private Lank lank;
++//    @OneToOne(fetch = FetchType.LAZY)
++//    @JoinColumn(name = "lank_id", nullable = false)
++//    private Lank lank;
+ 
+     public Member(String encodedPassword, String profileURL, String nickname, Long kakaoId) {
+         this.nickname = nickname;
+Index: src/main/java/com/dv/dancingvegetables/dto/requestdto/LankDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/dto/requestdto/LankDto.java b/src/main/java/com/dv/dancingvegetables/dto/requestdto/LankDto.java
+new file mode 100644
+--- /dev/null	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
++++ b/src/main/java/com/dv/dancingvegetables/dto/requestdto/LankDto.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -0,0 +1,14 @@
++package com.dv.dancingvegetables.dto.requestdto;
++
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
++
++@Getter
++@NoArgsConstructor
++@AllArgsConstructor
++public class LankDto {
++
++    private Long memberId;
++    private Long lankPoint;
++}
+Index: src/main/java/com/dv/dancingvegetables/repository/LankRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/repository/LankRepository.java b/src/main/java/com/dv/dancingvegetables/repository/LankRepository.java
+new file mode 100644
+--- /dev/null	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
++++ b/src/main/java/com/dv/dancingvegetables/repository/LankRepository.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -0,0 +1,20 @@
++package com.dv.dancingvegetables.repository;
++
++import com.dv.dancingvegetables.domain.Lank;
++import com.dv.dancingvegetables.domain.Member;
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Query;
++import org.springframework.stereotype.Repository;
++
++import java.util.ArrayList;
++import java.util.Optional;
++
++@Repository
++public interface LankRepository extends JpaRepository<Lank,Long> {
++    Optional<Lank> findByMember(Member member);
++
++    @Query(value ="select * from lank l order by lank_point desc limit 0,10;", nativeQuery = true)
++    Optional<ArrayList<Lank>> LankTen();
++
++
++}
+Index: src/main/java/com/dv/dancingvegetables/service/LankService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dv/dancingvegetables/service/LankService.java b/src/main/java/com/dv/dancingvegetables/service/LankService.java
+new file mode 100644
+--- /dev/null	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
++++ b/src/main/java/com/dv/dancingvegetables/service/LankService.java	(revision 158ea4c238bccbff2f02d902be12b0a999249669)
+@@ -0,0 +1,49 @@
++package com.dv.dancingvegetables.service;
++
++import com.dv.dancingvegetables.domain.Lank;
++import com.dv.dancingvegetables.domain.Member;
++import com.dv.dancingvegetables.dto.requestdto.LankDto;
++import com.dv.dancingvegetables.dto.responsedto.ResponseDto;
++import com.dv.dancingvegetables.repository.LankRepository;
++import com.dv.dancingvegetables.repository.MemberRepository;
++import lombok.RequiredArgsConstructor;
++import org.springframework.stereotype.Service;
++
++import javax.transaction.Transactional;
++import java.util.ArrayList;
++import java.util.Objects;
++
++@RequiredArgsConstructor
++@Service
++public class LankService {
++    private final MemberRepository memberRepository;
++    private final LankRepository lankRepository;
++
++    //랭크 포인트 갱신 밑 저장
++    @Transactional
++    public ResponseDto<?> lankPointSave(LankDto lankPoint) {
++        Member member = memberRepository.findById(lankPoint.getMemberId()).orElse(null);
++        Lank lankIsEmpty = lankRepository.findByMember(member).orElse(null);
++        if (lankIsEmpty==null) {
++            Lank lank = Lank.builder()
++                    .member(member)
++                    .lankPoint(lankPoint.getLankPoint())
++                    .build();
++            lankRepository.save(lank);
++        } else {
++            System.out.println(Objects.requireNonNull(lankIsEmpty).getLankPoint());
++            System.out.println("업데이트");
++            System.out.println("새로운 랭크 포인트 " + lankPoint.getLankPoint());
++
++            lankIsEmpty.update(lankPoint.getLankPoint());
++        }
++        return ResponseDto.success("success");
++    }
++
++    //랭킹 포인트 순위 10위
++    public ResponseDto<?> lankPoint(Long id){
++        ArrayList<Lank> lankTen=lankRepository.LankTen().orElse(null);
++
++        return ResponseDto.success(lankTen);
++    }
++}
