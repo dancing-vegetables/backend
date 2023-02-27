@@ -1,4 +1,5 @@
 package com.dv.dancingvegetables.dto.requestdto;
+import com.dv.dancingvegetables.shared.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,5 @@ public class MemberRequestDto {
     private String address;
 
     public String passwordConfirm;
+    private Authority role;
 }

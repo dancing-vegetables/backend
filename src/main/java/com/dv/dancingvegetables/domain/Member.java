@@ -1,6 +1,5 @@
 package com.dv.dancingvegetables.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -10,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+
 import java.util.Objects;
 
 @Builder
@@ -32,7 +31,6 @@ public class Member extends Timestamped implements Serializable {
 
     private String address;
 
-
     @JsonIgnore
     @Column(nullable = false)
     private String password;
@@ -42,10 +40,10 @@ public class Member extends Timestamped implements Serializable {
     private boolean isDeleted = Boolean.FALSE;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lank_id", nullable = false)
+    @JoinColumn(name = "lank_id", nullable = true)
     private Lank lank;
 
-    public Member(String encodedPassword, String profileURL, String nickname, Long kakaoId) {
+    public Member(String encodedPassword,  String nickname) {
         this.nickname = nickname;
         this.password = encodedPassword;
 

@@ -6,6 +6,7 @@ import com.dv.dancingvegetables.domain.Member;
 import com.dv.dancingvegetables.domain.RefreshToken;
 import com.dv.dancingvegetables.domain.UserDetailsImpl;
 import com.dv.dancingvegetables.repository.RefreshTokenRepository;
+import com.dv.dancingvegetables.shared.Authority;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -44,7 +45,7 @@ public class TokenProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 엑세스 토큰 만료시간
         String accessToken = Jwts.builder()
                 .setSubject(member.getNickname())
-
+                .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

@@ -1,6 +1,7 @@
 package com.dv.dancingvegetables.dto.responsedto;
 
 //import com.example.demo.shared.Authority;
+import com.dv.dancingvegetables.shared.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +20,5 @@ public class MemberResponseDto  {
     private LocalDateTime modifiedAt;
     private String email;
     private String address;
-
+    private Authority role;
 }

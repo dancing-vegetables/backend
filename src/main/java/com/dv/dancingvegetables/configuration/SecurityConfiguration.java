@@ -50,11 +50,14 @@ public class SecurityConfiguration {
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPointException)
                 .accessDeniedHandler(accessDeniedHandlerException)
+
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
                 .authorizeRequests()
+
                 .antMatchers("/v1/members/**").permitAll()
                 .antMatchers("/v1/auth/**").permitAll()
                 .antMatchers("/sub/**").permitAll()
